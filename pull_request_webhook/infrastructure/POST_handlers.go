@@ -28,7 +28,13 @@ func HandlePullRequestEvent(ctx *gin.Context) {
 	case "ping":
 		ctx.JSON(http.StatusOK, gin.H{"status": "success"})
 	case "pull_request":
-		statusCode = application.ProcessPullRequestEvent(rawData)
+		message := application.ProcessPullRequestEvent(rawData)
+
+		if message == "ERROR" {
+			statusCode = 500
+		} else {
+			statusCode = post_discord(message)
+		}
 	}
 
 	switch statusCode {
@@ -37,6 +43,8 @@ func HandlePullRequestEvent(ctx *gin.Context) {
 	case 403:
 		log.Printf("Error al deserializar el payload del pull request: %v", err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Error al procesar el payload del pull request"})
+	case 500:
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Error interno"})
 	default:
 		ctx.JSON(http.StatusOK, gin.H{"success": "Normal"})
 	}

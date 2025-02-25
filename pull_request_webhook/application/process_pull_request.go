@@ -6,14 +6,21 @@ import (
 	"log"
 )
 
-func ProcessPullRequestEvent(rawData []byte) int {
+func ProcessPullRequestEvent(rawData []byte) string {
 	var eventPayload value_objects.PullRequestEvent
 
 	if err := json.Unmarshal(rawData, &eventPayload); err != nil {
-		return 403
+		log.Println("Error al serializar payload")
+		return "ERROR"
 	}
 
 	log.Printf("Evento pull request recibido con accion de %s", eventPayload.Action)
 
-	return 200
+	base := eventPayload.PullRequest.Base.Ref
+	titulo := eventPayload.PullRequest.Title
+	repoFullName := eventPayload.Repository.FullName
+	user := eventPayload.PullRequest.User.Login
+	urlPullRequest := eventPayload.PullRequest.HTMLURL
+
+	return GenerateMessageToDiscord(base, titulo, repoFullName, user, urlPullRequest)
 }
