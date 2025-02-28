@@ -1,5 +1,5 @@
 package application
-
+//ui
 import "fmt"
 
 func GenerateMessageToDiscord(base, titulo, repoFullName, user, urlPullRequest string) string {
