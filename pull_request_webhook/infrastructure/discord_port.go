@@ -8,6 +8,7 @@ import (
 	"os"
 )
 
+// pull
 func post_discord(msg string) int {
 
 	discord_webhook_url := os.Getenv("DISCORD_WEBHOOK_URL")
