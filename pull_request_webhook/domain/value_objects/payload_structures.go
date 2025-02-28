@@ -1,5 +1,5 @@
 package value_objects
-
+//pruba 05
 type PullRequestEvent struct {
 	Action      string      `json:"action"`
 	PullRequest PullRequest `json:"pull_request"`
